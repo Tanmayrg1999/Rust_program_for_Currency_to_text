@@ -1,0 +1,150 @@
+use std::i32;
+use std::io;
+fn main() {
+	let mut _loop_value = String::new(); //asking user input in string format
+	let mut amount = String::new(); //user input for currecny amount
+	println!("Enter the Currency amount:");
+	io::stdin()
+		.read_line(&mut amount)
+		.expect("Failed to read line"); //user input
+	let amount1: f64 = amount
+		.trim()
+		.parse()
+		.ok()
+		.expect("Program only process numbers,Enter number"); //converting string input to integer
+	let amount = amount1 as i32; //integer currency
+	println!("integer amount is {}", amount);
+	let _diff: f64 = amount1 - f64::from(amount);
+	let _fn: f64 = _diff * f64::from(100); //decimal value converted to integer by multiplying 100 to it
+	let _int_fn = _fn.round(); // rounding the decimal equivalent
+	if amount < 100 {
+		convertintupto99(amount);
+	}
+	if amount < 1000 && amount >= 100 {
+		convertintupto999(amount);
+	}
+	if amount < 100000 && amount >= 1000 {
+		convertintupto99999(amount);
+	}
+	if amount >= 1_00_000 && amount < 1_00_00_000 {
+		convertintupto9999999(amount);
+	}
+	if amount >= 1_00_00_000 && amount < 1000000000 {
+		convertintupto999999999(amount);
+	} else {
+		print!("No out of range");
+	}
+	print!(" {}/100", _int_fn);
+}
+fn convertintupto99(a: i32) {
+	let b = a - 10;
+	let unit = [
+		"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+	]; //an array of strings of numbers numbered from 0-9
+	let ten1 = [
+		"ten",
+		"eleven",
+		"twelve",
+		"thirteen",
+		"fourteen",
+		"fifteen",
+		"sixteen",
+		"seventeen",
+		"eighteen",
+		"nineteen",
+	]; //an array of strings of numbers numbered from 10-19
+	let ten2 = [
+		"twenty", "thirty", "fourty", "fifty", "sixty", "seventy", "eighty", "ninety",
+	]; //an array of strings of numbers that are multiple of 10 till 100
+	if a < 0
+	//base case: if a valid input is not entered
+	{
+		println!("enter a valid input");
+	}
+	if a > 0 && a < 10
+	//case2: if input entered is a single digit
+	{
+		println!("{}", unit[a as usize]);
+	}
+	if a > 9 && a < 20
+	//case3: if input is between 10-20
+	{
+		print!("{}", ten1[b as usize]);
+	}
+	if a >= 20 && a < 100
+	//if input is between 20-100
+	{
+		let m1 = a / 10;
+		let m2 = a % 10;
+		let k = m1 - 2;
+		if m2 == 0 {
+			print!("{} ", ten2[k as usize]);
+		}
+		//fetching data from ten2 pointer array
+		else {
+			print!("{} ", ten2[k as usize]); //fetching data from ten2 pointer array
+			print!("{} ", unit[m2 as usize]); //fetching data from unit pointer array
+		}
+	}
+}
+fn convertintupto999(a: i32) //function to convert the 3 digit numbers to the currency
+{
+	let k = a / 100;
+	let t = k - 1;
+	let unit = [
+		"one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+	];
+	print!("{} hundred ", unit[t as usize]);
+	if a / 100 != 0 {
+		convertintupto99(a % 100);
+	} // calling the convertintupto99 function
+}
+fn convertintupto99999(a: i32) //function to convert the 4 and 5 digit numbers to the currency
+{
+	let k = a / 1000;
+	let m = a % 1000;
+	convertintupto99(k); // calling the convertintupto99 function
+	print!(" thousand ");
+	if m < 100 {
+		convertintupto99(m);
+	} // calling the convertintupto99 function
+	if m > 99 {
+		convertintupto999(m);
+	} // calling the convertintupto999 function
+}
+fn convertintupto9999999(a: i32) //function to convert the 6 and 7 digit numbers to the currency
+{
+	let k = a / 100000;
+	let m = (a) % 100000;
+	convertintupto99(k); // calling the convertintupto99 function
+	print!(" lakh ");
+	if m < 99 {
+		convertintupto99(m);
+	} // calling the convertintupto99 function
+	if m <= 999 && m > 99 {
+		convertintupto999(m);
+	} // calling the convertintupto999 function
+	if m > 999 {
+		convertintupto99999(m);
+	} // calling the convertintupto99999 function
+}
+fn convertintupto999999999(a: i32) //function to convert the 8 and 9 digit numbers to the currency
+{
+	let k = a / 10000000;
+	let m = (a) % 10000000;
+	convertintupto99(k); // calling the convertintupto99 function
+	print!(" crore ");
+	if m < 100 {
+		convertintupto99(m);
+	} // calling the convertintupto99 function
+	if m < 1000 && m > 99 {
+		convertintupto999(m);
+	} // calling the convertintupto999 function
+	if m > 999 && m < 100000 {
+		convertintupto99999(m);
+	}
+	// calling the convertintupto99999 function
+	else {
+		convertintupto9999999(m);
+	} // calling the convertintupto9999999 function
+}
