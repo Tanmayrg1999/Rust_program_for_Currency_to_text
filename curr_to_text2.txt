@@ -1,0 +1,220 @@
+use std::i32;
+use std::io;
+//static output:String="curr";
+//fun()->String
+fn main() {
+	let mut _loop_value = String::new(); //asking user input in string format
+	let mut amount = String::new(); //user input for currecny amount
+	let mut op = " ".to_string();
+	println!("Enter the Currency amount:");
+	io::stdin()
+		.read_line(&mut amount)
+		.expect("Failed to read line"); //user input
+	let intamount: f64 = amount
+		.trim()
+		.parse()
+		.ok()
+		.expect("Program only process numbers,Enter number"); //converting string input to integer
+	let amount = intamount as i32; //integer currency
+	println!("integer amount is {}", amount);
+	let _diff: f64 = intamount - f64::from(amount);
+	let _fn: f64 = _diff * f64::from(100); //decimal value converted to integer by multiplying 100 to it
+	let _int_fn = _fn.round(); // rounding the decimal equivalent
+	if amount < 100 {
+		print!("{}", convertintupto99(amount));
+	}
+	if amount < 1000 && amount >= 100 {
+		print!("{}", convertintupto999(amount));
+	}
+	//	static mut output:&str="currency";
+	if amount < 100000 && amount >= 1000 {
+		print!("{}", convertintupto99999(amount));
+	}
+	if amount >= 1_00_000 && amount < 1_00_00_000 {
+		print!("{}", convertintupto9999999(amount));
+	}
+	if amount >= 1_00_00_000  {
+		print!("{}", convertintupto999999999(amount));
+	}
+	if _int_fn!=0.0
+	{
+			print!(" {}/100", _int_fn);
+	}
+}
+fn convertintupto99(a: i32) -> String {
+	let mut output = String::new();
+	let b = a - 10;
+	let unit = [
+		"zero ", "one ", "two ", "three ", "four ", "five ", "six ", "seven ", "eight ", "nine ",
+	]; //an array of strings of numbers numbered from 0-9
+	let ten1 = [
+		"ten ",
+		"eleven ",
+		"twelve ",
+		"thirteen ",
+		"fourteen ",
+		"fifteen ",
+		"sixteen ",
+		"seventeen ",
+		"eighteen ",
+		"nineteen ",
+	]; //an array of strings of numbers numbered from 10-19
+	let ten2 = [
+		"twenty ", "thirty ", "fourty ", "fifty ", "sixty ", "seventy ", "eighty ", "ninety ",
+	]; //an array of strings of numbers that are multiple of 10 till 100
+	if a < 0
+	//base case: if a valid input is not entered
+	{
+		output.push_str("enter a valid input");
+	}
+	if a > 0 && a < 10
+	//case2: if input entered is a single digit
+	{
+		output.push_str(unit[a as usize]);
+	}
+	if a > 9 && a < 20
+	//case3: if input is between 10-20
+	{
+		output.push_str(ten1[b as usize]);
+	}
+	if a >= 20 && a < 100
+	//if input is between 20-100
+	{
+		let m1 = a / 10;
+		let m2 = a % 10;
+		let k = m1 - 2;
+		if m2 == 0 {
+			output.push_str(ten2[k as usize]);
+		}
+		//fetching data from ten2 pointer array
+		else {
+			output.push_str(ten2[k as usize]); //fetching data from ten2 pointer array
+			output.push_str(unit[m2 as usize]); //fetching data from unit pointer array
+		}
+	}
+	output
+}
+fn convertintupto999(a: i32) -> String //function to convert the 3 digit numbers to the currency
+{
+	let mut output = String::new();
+	let k = a / 100;
+	let t = k - 1;
+	let unit = [
+		"one", "two", "three", "four", "five", "six", "seven", "eight", "nine",
+	];
+	//output.push_str(unit[t as usize]);
+	//output.push_str(" hundred");
+	output = [unit[t as usize], "hundred"].join(" ");
+
+	if a / 100 != 0 {
+		output = [output, convertintupto99(a % 100)].join(" ");
+	} // calling the convertintupto99 function
+
+	//let result = [a, b].join("\n");
+	output
+}
+fn convertintupto99999(a: i32) -> String //function to convert the 4 and 5 digit numbers to the currency
+{
+	let mut output = String::new();
+	let k = a / 1000;
+	let m = a % 1000;
+	output = [convertintupto99(k), "thousand".to_string()].join(" ");
+	if m < 100 {
+		output = [output, convertintupto99(m)].join(" ");
+	} // calling the convertintupto99 function
+	if m > 99 {
+		output = [output, convertintupto999(m)].join(" ");
+	} // calling the convertintupto999 function
+
+	output
+}
+fn convertintupto9999999(a: i32) -> String //function to convert the 6 and 7 digit numbers to the currency
+{
+	let k = a / 100000;
+	let m = (a) % 100000;
+	let mut output = String::new();
+	output = [convertintupto99(k), "lakh".to_string()].join(" "); // calling the convertintupto99 function
+	if m < 99 {
+		output = [output, convertintupto99(m)].join(" ");
+	} // calling the convertintupto99 function
+	if m <= 999 && m > 99 {
+		output = [output, convertintupto999(m)].join(" ");
+	} // calling the convertintupto999 function
+	if m > 999 {
+		output = [output, convertintupto99999(m)].join(" ");
+	} // calling the convertintupto99999 function
+	output
+}
+fn convertintupto999999999(a: i32) -> String //function to convert the 8 and 9 digit numbers to the currency
+{
+	let k = a / 10000000;
+	let m = (a) % 10000000;
+	let mut output = String::new();
+	if a>1_00_00_00_000
+	{
+		output.push_str("No out of Range");
+	}
+	else{
+	output = [convertintupto99(k), "crore".to_string()].join(" "); // calling the convertintupto99 function
+	if m < 100 {
+		output = [output, convertintupto99(m)].join(" ");
+	} // calling the convertintupto99 function
+	if m < 1000 && m > 99 {
+		output = [output, convertintupto999(m)].join(" ");
+	} // calling the convertintupto999 function
+	if m > 999 && m < 100000 {
+		output = [output, convertintupto99999(m)].join(" ");
+	}
+	// calling the convertintupto99999 function
+	if m >100000 && m<=99_99_999{
+		output = [output, convertintupto9999999(m)].join(" ");
+	} // calling the convertintupto9999999 function
+}
+	output
+}
+
+//#[cfg(test)]
+mod tests {
+	// Note this useful idiom: importing names from outer (for mod tests) scope.
+	use super::*;
+	#[test]
+	fn test_case1() {
+		assert_eq!(convertintupto99(98),"ninety eight ");
+	}
+	#[test]
+	fn test_case2(){
+		assert_eq!(convertintupto999(996),"nine hundred ninety six ");
+	}
+	#[test]
+	fn test_case3(){
+		assert_eq!(convertintupto99999(3166),"three  thousand one hundred sixty six ");
+	}
+	#[test]
+	fn test_case4(){
+		assert_eq!(convertintupto99999(99996),"ninety nine  thousand nine hundred ninety six ");
+	}
+	#[test]
+	fn test_case5(){
+		assert_eq!(convertintupto9999999(999996),"nine  lakh ninety nine  thousand nine hundred ninety six ");
+	}
+	#[test]
+	fn test_case6(){
+		assert_eq!(convertintupto9999999(7999996),"seventy nine  lakh ninety nine  thousand nine hundred ninety six ");
+	}
+	#[test]
+	fn test_case7(){
+		assert_eq!(convertintupto999999999(79999996),"seven  crore ninety nine  lakh ninety nine  thousand nine hundred ninety six ");
+	}
+	#[test]
+	fn test_case8(){
+		assert_eq!(convertintupto999999999(999999999),"ninety nine  crore ninety nine  lakh ninety nine  thousand nine hundred ninety nine ");
+	}
+	#[test]
+	fn test_case9(){
+		assert_eq!(convertintupto99(-1),"enter a valid input");
+	}
+	#[test]
+	fn test_case10(){
+		assert_eq!(convertintupto999999999(1999999999),"No out of Range");
+	}
+}
